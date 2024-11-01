@@ -4,21 +4,23 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
 import lightTheme from '../theme/lightTheme';
 
-function SearchBar({ placeholder, value, onChange, disabled = false, active = false }) {
+function SearchBar({ placeholder, value, onChange, disabled = false, variant }) {
+  const isActive = variant === 'active' || variant === 'typing';
+
   return (
     <TextField
       variant="outlined"
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      disabled={disabled}
+      disabled={disabled || variant === 'disabled'}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
             <SearchOutlinedIcon />
           </InputAdornment>
         ),
-        endAdornment: active && value && (
+        endAdornment: isActive && value && (
           <InputAdornment position="end">
             <IconButton onClick={() => onChange({ target: { value: '' } })} edge="end">
               <ClearIcon />
@@ -27,25 +29,25 @@ function SearchBar({ placeholder, value, onChange, disabled = false, active = fa
         ),
       }}
       sx={{
-        width: 250, // Set width from requirements
+        width: 250,
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: '#CACACA', // Default border color
+            borderColor: '#CACACA',
           },
           '&:hover fieldset': {
-            borderColor: '#CACACA', // Hover border color
+            borderColor: '#CACACA',
           },
           '&.Mui-focused fieldset': {
-            borderColor: '#CACACA', // Focus border color
+            borderColor: '#CACACA',
           },
           '&.Mui-disabled fieldset': {
-            borderColor:'#CACACA', // Disabled border color
+            borderColor: '#CACACA',
           },
         },
         '& .MuiInputBase-input': {
-          fontFamily: lightTheme.typography.fontFamily, // Apply font family from theme
-          fontSize: lightTheme.typography.fontSize, // Apply font size from theme
-          fontWeight: active ? 500 : 400, // Medium font style when active, regular otherwise
+          fontFamily: lightTheme.typography.fontFamily,
+          fontSize: lightTheme.typography.fontSize,
+          fontWeight: isActive ? 500 : 400,
         },
       }}
     />
@@ -53,43 +55,45 @@ function SearchBar({ placeholder, value, onChange, disabled = false, active = fa
 }
 
 export default function SearchVariants() {
-  const [defaultValue, setDefaultValue] = React.useState('');
-  const [hoverValue, setHoverValue] = React.useState('');
-  const [typingValue, setTypingValue] = React.useState('Sel');
-  const [activeValue, setActiveValue] = React.useState('Search Text');
-  const [disabledValue] = React.useState('');
+  const [searchValues, setSearchValues] = React.useState({
+    search: '',
+    default: '',
+    hover: '',
+    typing: '',
+    active: '',
+    disabled: '',
+  });
+
+  const handleInputChange = (variant) => (e) => {
+    setSearchValues((prevValues) => ({
+      ...prevValues,
+      [variant]: e.target.value,
+    }));
+  };
+
+  const variants = [
+    { label: 'Search', variant: 'search', placeholder: 'Search by name' },
+    { label: 'Default', variant: 'default', placeholder: 'Search by name' },
+    { label: 'Hover', variant: 'hover', placeholder: 'Search by name' },
+    { label: 'While typing', variant: 'typing', placeholder: 'Search by name' },
+    { label: 'Active', variant: 'active', placeholder: 'Search by name' },
+    { label: 'Disabled', variant: 'disabled', placeholder: 'Search by name' },
+  ];
 
   return (
     <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-      <Box sx={{ marginBottom: 0 }}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">Search</Typography>
-        <SearchBar placeholder="Search by name" value={defaultValue} onChange={(e) => setDefaultValue(e.target.value)} />
-      </Box>
-
-      <Box sx={{ marginBottom: 0 }}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">Default</Typography>
-        <SearchBar placeholder="Search by name" value={defaultValue} onChange={(e) => setDefaultValue(e.target.value)} />
-      </Box>
-
-      <Box sx={{ marginBottom: 0 }}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">Hover</Typography>
-        <SearchBar placeholder="Search by name" value={hoverValue} onChange={(e) => setHoverValue(e.target.value)} />
-      </Box>
-
-      <Box sx={{ marginBottom: 0 }}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">While typing</Typography>
-        <SearchBar placeholder="Search by name" value={typingValue} onChange={(e) => setTypingValue(e.target.value)} active />
-      </Box>
-
-      <Box sx={{ marginBottom: 0}}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">Active</Typography>
-        <SearchBar placeholder="Search by name" value={activeValue} onChange={(e) => setActiveValue(e.target.value)} active />
-      </Box>
-
-      <Box sx={{ marginBottom: 0 }}> {/* Adjust this value for spacing */}
-        <Typography variant="h6">Disabled</Typography>
-        <SearchBar placeholder="Search by name" value={disabledValue} onChange={() => {}} disabled />
-      </Box>
+      {variants.map((variantData, index) => (
+        <Box key={index} sx={{ marginBottom: 0 }}>
+          <Typography variant="h6">{variantData.label}</Typography>
+          <SearchBar
+            placeholder={variantData.placeholder}
+            value={searchValues[variantData.variant]}
+            onChange={handleInputChange(variantData.variant)}
+            variant={variantData.variant}
+            disabled={variantData.variant === 'disabled'}
+          />
+        </Box>
+      ))}
     </Box>
   );
 }

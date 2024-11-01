@@ -67,7 +67,7 @@ function CustomSwitch({
   };
 
   return (
-    <Box onClick={() => !disabled && setChecked(!checked)} sx={{ cursor: disabled ? 'default' : 'pointer' }}>
+    <Box onClick={() => !disabled && setChecked(!checked)} sx={{ cursor: disabled ? 'default' : 'pointer', paddingLeft: "20px" }}>
       <FormControlLabel
         control={
           <CustomStyledSwitch
@@ -84,6 +84,7 @@ function CustomSwitch({
               </Box>
               <Typography 
                 sx={{ 
+                 
                   color: "#FF980E", 
                   fontStyle: labelPlacement === 'bottom' ? 'italic' : 'normal' 
                 }}
@@ -94,7 +95,8 @@ function CustomSwitch({
           ) : (
             <Typography
               sx={{ 
-                fontStyle: labelPlacement === 'bottom' ? 'italic' : 'normal' 
+                fontStyle: labelPlacement === 'bottom' ? 'italic' : 'normal',
+                paddingLeft: "15px"
               }}
             >
               {label || (checked ? 'On' : 'Off')}

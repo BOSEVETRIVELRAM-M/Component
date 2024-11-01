@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SearchVariants from './components/search/searchAutowidth';
 import AllSwitches from './components/switch/switch';
-import AllTab from './components/tabs/tab';
 import PrivateRoute from './components/router/privateRouter';
+import AllTab from './components/tabs/tab';
 
 function App() {
   //Change this to `false` to see the behaviour of the private router
